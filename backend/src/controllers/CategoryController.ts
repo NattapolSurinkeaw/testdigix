@@ -3,13 +3,25 @@ import { Categories } from '../models/categories';
 
 export class CategoryController {
     onGetCategoryAll = async(req: Request, res: Response) => {
-        const categories = await Categories.findAll();
-        return res.status(200).json({
-            status: true,
-            message: "ok",
-            descriptin: "get category all ok",
-            categories: categories
-        });
+        try {
+            const categories = await Categories.findAll({
+                where: { status_display: true },
+                order: [['priority', 'ASC']]
+            });
+
+            return res.status(200).json({
+                status: "success",
+                message: "ok",
+                descriptin: "get category all ok",
+                categories: categories
+            });
+        } catch (error) {
+            return res.status(500).json({
+                status: "error",
+                message: "Internal server error",
+                error: error instanceof Error ? error.message : error
+            });
+        }
     }
 
     onGetCategoryById = async (req: Request, res: Response) => {
@@ -19,19 +31,19 @@ export class CategoryController {
 
             if (!category) {
                 return res.status(404).json({
-                    status: false,
+                    status: "error",
                     message: "not found category"
                 });
             }
 
             return res.status(200).json({
-                status: true,
+                status: "success",
                 message: "ok",
                 category: category
             });
         } catch (error) {
             return res.status(500).json({
-                status: false,
+                status: "error",
                 message: "Internal server error",
                 error: error instanceof Error ? error.message : error
             });
@@ -44,7 +56,7 @@ export class CategoryController {
 
             if (!cate_title || priority === undefined) {
                 return res.status(400).json({
-                    status: false,
+                    status: "error",
                     message: "cate_title and priority are required"
                 });
             }
@@ -57,13 +69,13 @@ export class CategoryController {
             });
 
             return res.status(201).json({
-                status: true,
+                status: "success",
                 message: "create category successfully",
                 category: newCategory
             });
         } catch (error) {
             return res.status(500).json({
-                status: false,
+                status: "error",
                 message: "Internal server error",
                 error: error instanceof Error ? error.message : error
             });
@@ -79,7 +91,7 @@ export class CategoryController {
 
             if (!category) {
                 return res.status(404).json({
-                    status: false,
+                    status: "error",
                     message: "not found category"
                 });
             }
@@ -92,13 +104,13 @@ export class CategoryController {
             });
 
             return res.status(200).json({
-                status: true,
+                status: "success",
                 message: "update category ok",
                 category: category
             });
         } catch (error) {
             return res.status(500).json({
-                status: false,
+                status: "error",
                 message: "Internal server error",
                 error: error instanceof Error ? error.message : error
             });
@@ -112,7 +124,7 @@ export class CategoryController {
 
             if (!category) {
                 return res.status(404).json({
-                    status: false,
+                    status: "error",
                     message: "not found category"
                 });
             }
@@ -120,12 +132,12 @@ export class CategoryController {
             await category.destroy();
 
             return res.status(200).json({
-                status: true,
+                status: "success",
                 message: "delete category ok"
             });
         } catch (error) {
             return res.status(500).json({
-                status: false,
+                status: "error",
                 message: "Internal server error",
                 error: error instanceof Error ? error.message : error
             });

@@ -30,14 +30,12 @@ export class AuthenController {
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            const permission = 'user';
             const statusConfirm = 'confirmed';
             const status = 'active';
 
             const tokenPayload = {
                 username,
-                email,
-                permission
+                email
             };
 
             const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1d' });
@@ -113,7 +111,6 @@ export class AuthenController {
                 users_code: user.users_code,
                 username: user.username,
                 email: user.email,
-                permission: user.permission
             };
 
             const newAccessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1d' });

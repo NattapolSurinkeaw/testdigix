@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express, { Request, Response, Application } from 'express';
+import cors from 'cors';
 import { sequelize } from './util/database';
 import { authenRoute } from './routes/authenRoute';
 import { authorRoute } from './routes/authorRoute';
@@ -10,6 +11,13 @@ import { authenticateToken } from './middlewares/authMiddleware';
 
 const app: Application = express();
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+
+app.use(cors({
+  origin: 'http://localhost:5173', // อนุญาตเฉพาะ Origin ของ React
+  credentials: true,               // อนุญาตให้ส่ง Cookie หรือ Header พิเศษได้
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Middleware
 app.use(express.json());

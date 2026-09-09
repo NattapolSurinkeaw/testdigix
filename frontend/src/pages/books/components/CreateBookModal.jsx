@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Card, Modal, Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import { bookService } from '../../services/bookService';
-import { categoryService } from '../../services/categoryService';
-import { authorService } from '../../services/authorService';
-import BooksTable from './components/BooksTable';
-import CreateBookModal from './components/CreateBookModal';
-import CreateCategoryModal from '../categories/components/CreateCategoryModal';
-import CreateAuthorModal from '../authors/components/CreateAuthorModal';
+import { Modal, Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { bookService } from '../../../services/bookService';
+import { categoryService } from '../../../services/categoryService';
+import { authorService } from '../../../services/authorService';
+import CreateCategoryModal from '../../categories/components/CreateCategoryModal';
+import CreateAuthorModal from '../../authors/components/CreateAuthorModal';
 
 const emptyForm = {
   title: '',
@@ -31,80 +29,51 @@ const styleModal = {
   overflowY: 'auto',
 };
 
-export default function Books() {
-  const [books, setBooks] = useState([]);
-  const [authors, setAuthors] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const [openCreate, setOpenCreate] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [editId, setEditId] = useState(null);
+export default function CreateBookModal({ open, onClose, onCreated }) {
+  const fileInputRef = useRef(null);
   const [form, setForm] = useState(emptyForm);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const fileInputRef = useRef(null);
+
+  const [categories, setCategories] = useState([]);
+  const [authors, setAuthors] = useState([]);
 
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
   const [openCreateAuthor, setOpenCreateAuthor] = useState(false);
 
-  const fetchAll = async () => {
-    setLoading(true);
+  const fetchOptions = async () => {
     try {
-      const [b, a, c] = await Promise.all([
-        bookService.getAll(),
-        authorService.getAll(),
+      const [c, a] = await Promise.all([
         categoryService.getAll(),
+        authorService.getAll(),
       ]);
-      if (b.status) setBooks(b.books || []);
-      if (a.status) setAuthors(a.authors || []);
       if (c.status) setCategories(c.categories || []);
+      if (a.status) setAuthors(a.authors || []);
     } catch (err) {
-      console.error('fetch books error:', err);
-    } finally {
-      setLoading(false);
+      console.error('fetch options error:', err);
     }
   };
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => {
+    if (open) fetchOptions();
+  }, [open]);
 
-  const resetEditForm = () => {
+  const reset = () => {
     setForm(emptyForm);
     setFile(null);
     setPreview('');
-    setEditId(null);
     setError('');
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const handleOpenEdit = (b) => {
-    resetEditForm();
-    setEditId(b.id);
-    setForm({
-      title: b.title || '',
-      description: b.description || '',
-      author_id: b.author_id ?? '',
-      cate_id: b.cate_id ?? '',
-      publish_year: b.publish_year ?? new Date().getFullYear(),
-      status_display: b.status_display ?? true,
-    });
-    if (b.thumnail) {
-      const src = b.thumnail.startsWith('http')
-        ? b.thumnail
-        : `${(import.meta.env.VITE_API_PATH || '').replace(/\/api$/, '')}/${b.thumnail}`;
-      setPreview(src);
-    }
-    setOpenEdit(true);
+  const handleClose = () => {
+    reset();
+    onClose();
   };
 
-  const handleCloseEdit = () => {
-    setOpenEdit(false);
-    resetEditForm();
-  };
-
-  const handleEditChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
     if (type === 'file') {
       const f = files[0];
@@ -115,18 +84,18 @@ export default function Books() {
     setForm({ ...form, [name]: type === 'checkbox' ? checked : value });
   };
 
-  const handleEditSelect = (name) => (e) => {
+  const handleSelect = (name) => (e) => {
     setForm({ ...form, [name]: e.target.value });
   };
 
-  const handleEditSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     if (!form.title || !form.author_id || !form.cate_id || !form.publish_year) {
       setError('กรุณากรอก title, author, category และ publish_year');
       return;
     }
-    setSubmitting(true);
+    setLoading(true);
     try {
       const payload = new FormData();
       payload.append('title', form.title);
@@ -137,28 +106,18 @@ export default function Books() {
       payload.append('status_display', String(form.status_display));
       if (file) payload.append('thumnail', file);
 
-      const res = await bookService.update(editId, payload);
+      const res = await bookService.create(payload);
       if (res.status) {
-        handleCloseEdit();
-        fetchAll();
+        reset();
+        onClose();
+        onCreated?.(res.book);
       } else {
         setError(res.message || 'บันทึกไม่สำเร็จ');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'เกิดข้อผิดพลาด');
     } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleDelete = async (b) => {
-    if (!window.confirm(`ลบหนังสือ "${b.title}"?`)) return;
-    try {
-      const res = await bookService.remove(b.id);
-      if (res.status) fetchAll();
-      else alert(res.message || 'ลบไม่สำเร็จ');
-    } catch (err) {
-      alert(err.response?.data?.message || 'เกิดข้อผิดพลาด');
+      setLoading(false);
     }
   };
 
@@ -173,48 +132,16 @@ export default function Books() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <p className="text-xl font-bold text-gray-700">Books</p>
-        <button
-          onClick={() => setOpenCreate(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 h-10 rounded-md transition-all ease-in-out duration-300"
-        >
-          + เพิ่มหนังสือ
-        </button>
-      </div>
-
-      <Card className="p-4">
-        <div className="relative overflow-x-auto rounded-md">
-          {loading ? (
-            <p className="p-4 text-gray-500">กำลังโหลด...</p>
-          ) : (
-            <BooksTable
-              books={books}
-              authors={authors}
-              categories={categories}
-              onEdit={handleOpenEdit}
-              onDelete={handleDelete}
-            />
-          )}
-        </div>
-      </Card>
-
-      <CreateBookModal
-        open={openCreate}
-        onClose={() => setOpenCreate(false)}
-        onCreated={fetchAll}
-      />
-
-      <Modal open={openEdit} onClose={handleCloseEdit}>
+    <>
+      <Modal open={open} onClose={handleClose}>
         <Box sx={styleModal}>
-          <h2 className="text-xl font-bold mb-4">แก้ไขหนังสือ</h2>
+          <h2 className="text-xl font-bold mb-4">เพิ่มหนังสือ</h2>
           {error && (
             <div className="mb-3 p-2 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
               {error}
             </div>
           )}
-          <form onSubmit={handleEditSubmit} className="flex flex-col gap-3">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <div>
               <label className="block text-sm font-medium mb-1">รูปภาพหนังสือ</label>
               <div
@@ -230,12 +157,7 @@ export default function Books() {
                     />
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setFile(null);
-                        setPreview('');
-                        if (fileInputRef.current) fileInputRef.current.value = '';
-                      }}
+                      onClick={(e) => { e.stopPropagation(); reset(); }}
                       className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white text-xs px-2 py-1 rounded"
                     >
                       ลบรูป
@@ -254,7 +176,7 @@ export default function Books() {
                   type="file"
                   name="thumnail"
                   accept="image/*"
-                  onChange={handleEditChange}
+                  onChange={handleChange}
                   className="hidden"
                 />
               </div>
@@ -265,7 +187,7 @@ export default function Books() {
               <input
                 name="title"
                 value={form.title}
-                onChange={handleEditChange}
+                onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -276,7 +198,7 @@ export default function Books() {
               <textarea
                 name="description"
                 value={form.description}
-                onChange={handleEditChange}
+                onChange={handleChange}
                 rows={2}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -288,16 +210,23 @@ export default function Books() {
                 type="number"
                 name="publish_year"
                 value={form.publish_year}
-                onChange={handleEditChange}
+                onChange={handleChange}
                 required
+                min="1000"
+                max="9999"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div className="flex items-end gap-2">
               <FormControl fullWidth size="small" required>
-                <InputLabel>หมวดหมู่</InputLabel>
-                <Select value={form.cate_id} label="หมวดหมู่" onChange={handleEditSelect('cate_id')}>
+                <InputLabel id="create-book-cate-label">หมวดหมู่</InputLabel>
+                <Select
+                  labelId="create-book-cate-label"
+                  label="หมวดหมู่"
+                  value={form.cate_id}
+                  onChange={handleSelect('cate_id')}
+                >
                   {categories.map((c) => (
                     <MenuItem key={c.id} value={c.id}>{c.cate_title}</MenuItem>
                   ))}
@@ -314,8 +243,13 @@ export default function Books() {
 
             <div className="flex items-end gap-2">
               <FormControl fullWidth size="small" required>
-                <InputLabel>ผู้แต่ง</InputLabel>
-                <Select value={form.author_id} label="ผู้แต่ง" onChange={handleEditSelect('author_id')}>
+                <InputLabel id="create-book-author-label">ผู้แต่ง</InputLabel>
+                <Select
+                  labelId="create-book-author-label"
+                  label="ผู้แต่ง"
+                  value={form.author_id}
+                  onChange={handleSelect('author_id')}
+                >
                   {authors.map((a) => (
                     <MenuItem key={a.id} value={a.id}>{a.author_name}</MenuItem>
                   ))}
@@ -335,26 +269,26 @@ export default function Books() {
                 type="checkbox"
                 name="status_display"
                 checked={form.status_display}
-                onChange={handleEditChange}
-                id="edit_book_status"
+                onChange={handleChange}
+                id="create_book_status"
               />
-              <label htmlFor="edit_book_status" className="text-sm">แสดงผล</label>
+              <label htmlFor="create_book_status" className="text-sm">แสดงผล</label>
             </div>
 
             <div className="flex justify-end gap-2 mt-2">
               <button
                 type="button"
-                onClick={handleCloseEdit}
+                onClick={handleClose}
                 className="px-4 h-10 rounded-md bg-gray-300 hover:bg-gray-400 transition"
               >
                 ยกเลิก
               </button>
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={loading}
                 className="px-4 h-10 rounded-md bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-400 transition"
               >
-                {submitting ? 'กำลังบันทึก...' : 'บันทึก'}
+                {loading ? 'กำลังบันทึก...' : 'บันทึก'}
               </button>
             </div>
           </form>
@@ -371,6 +305,6 @@ export default function Books() {
         onClose={() => setOpenCreateAuthor(false)}
         onCreated={handleAuthorCreated}
       />
-    </div>
+    </>
   );
 }
