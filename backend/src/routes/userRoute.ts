@@ -1,9 +1,10 @@
 import { Router } from "express"
-import 
+import { UserController } from "../controllers/UserController"
+import { upload } from "../middlewares/upload";
 
 const router = Router()
-const authenController = new BookController()
+const userController = new UserController()
 
-router.get('/books', bookController.OngetBooks)
+router.get('/books', userController.onGetUserAll)
 
-export const bookRoute = router
+export const userRoute = router

@@ -8,14 +8,6 @@ export const User = sequelize.define('User',
         type: DataTypes.INTEGER,
         primaryKey: true
     },
-    users_code: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-    },
-    access_token: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
     username: {
         type: DataTypes.STRING(255),
         allowNull: false
@@ -28,9 +20,9 @@ export const User = sequelize.define('User',
         type: DataTypes.STRING(255),
         allowNull: false,
     },
-    permission: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
+    access_token: {
+        type: DataTypes.TEXT,
+        allowNull: false
     },
     status_confirm: {
         type: DataTypes.STRING(10),
@@ -42,7 +34,7 @@ export const User = sequelize.define('User',
     },
     profile_img: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
     },
     status: {
         type: DataTypes.STRING(20),

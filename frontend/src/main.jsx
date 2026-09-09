@@ -7,7 +7,7 @@ import axios from 'axios'
 
 axios.interceptors.request.use((request) => {
   request.headers.Authorization = `Bearer ${localStorage.getItem("accessToken")}`;
-  request.url = `${import.meta.env.VITE_API_PATH}${request.url}`;
+  request.url = `${import.meta.env.API_PATH}${request.url}`;
   return request;
 });
 

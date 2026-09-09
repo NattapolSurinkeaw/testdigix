@@ -1,15 +1,37 @@
 import 'dotenv/config';
 import express, { Request, Response, Application } from 'express';
-import { bookRoute } from './routes/bookRoute';
 import { sequelize } from './util/database';
-import './models/users';
+import { authenRoute } from './routes/authenRoute';
+import { authorRoute } from './routes/authorRoute';
+import { bookRoute } from './routes/bookRoute';
+import { categoryRoute } from './routes/categoryRoute';
+import { userRoute } from './routes/userRoute';
+import { authenticateToken } from './middlewares/authMiddleware';
 
 const app: Application = express();
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
 // Middleware
 app.use(express.json());
-app.use(bookRoute)
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/api', authenRoute)
+
+app.use(authenticateToken);
+app.use('/api', authorRoute)
+app.use('/api', bookRoute)
+app.use('/api', categoryRoute)
+app.use('/api', userRoute)
+
+app.use((err: any, req: Request, res: Response, next: any) => {
+  if (err) {
+    return res.status(400).json({
+      status: "error",
+      message: err.message || "Upload error",
+    });
+  }
+  next();
+});
 
 // Sample Route
 app.get('/', (req: Request, res: Response) => {
