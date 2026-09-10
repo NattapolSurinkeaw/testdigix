@@ -52,8 +52,8 @@ export class CategoryController {
 
     onCreateCategory = async (req: Request, res: Response) => {
         try {
-            const { cate_title, description, priority, status_display } = req.body;
-
+            const { cate_title, description, priority, status_display } = req.body || {};
+            console.log(req.body)
             if (!cate_title || priority === undefined) {
                 return res.status(400).json({
                     status: "error",
@@ -85,7 +85,7 @@ export class CategoryController {
     onUpdateCategory = async (req: Request, res: Response) => {
         try {
             const id = req.params.id as string;
-            const { cate_title, description, priority, status_display } = req.body;
+            const { cate_title, description, priority, status_display } = req.body || {};
 
             const category = (await Categories.findByPk(id)) as any;
 

@@ -1,0 +1,819 @@
+{
+  "info": {
+    "_postman_id": "7955d161-47e0-4031-a154-2808236cfc2f",
+    "name": "Enpoint book library",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58058959",
+    "_collection_link": "https://go.postman.co/collection/58058959-7955d161-47e0-4031-a154-2808236cfc2f?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "username",
+              "value": "admin12345",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "admin12345",
+              "type": "text"
+            },
+            {
+              "key": "email",
+              "value": "admin@example.com",
+              "type": "text"
+            },
+            {
+              "key": "display_name",
+              "value": "admin admin",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "username",
+              "value": "admin12345",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "admin12345",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "book all",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{supabase_service_role_api_key_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/books",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "books"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "book by cate id",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/books?categoryId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "books"
+          ],
+          "query": [
+            {
+              "key": "categoryId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "book by id",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{supabase_service_role_api_key_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/book/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "book",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create book",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "harry potter",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "description harry potter",
+              "type": "text"
+            },
+            {
+              "key": "author_id",
+              "value": "1",
+              "type": "text"
+            },
+            {
+              "key": "cate_id",
+              "value": "1",
+              "type": "text"
+            },
+            {
+              "key": "publish_year",
+              "value": "2026",
+              "type": "text"
+            },
+            {
+              "key": "thumnail",
+              "type": "file",
+              "src": [
+                "/C:/Users/RANGER/Desktop/th-11134201-7rash-m721srxlcncf4a@resize_w450_nl.webp"
+              ]
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/book",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "book"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update book",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "harry potter new",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "description harry potter new",
+              "type": "text"
+            },
+            {
+              "key": "author_id",
+              "value": "1",
+              "type": "text"
+            },
+            {
+              "key": "cate_id",
+              "value": "1",
+              "type": "text"
+            },
+            {
+              "key": "publish_year",
+              "value": "2025",
+              "type": "text"
+            },
+            {
+              "key": "thumnail",
+              "type": "file",
+              "src": [
+                "/C:/Users/RANGER/Desktop/th-11134201-7rash-m721srxlcncf4a@resize_w450_nl.webp"
+              ]
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/book/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "book",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete book",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/book/5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "book",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "category all",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/category",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "category"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "category by id",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/category/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "category",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create category",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{supabase_service_role_api_key_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "cate_title",
+              "value": "แฟนตาซี",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "หมวดหมู่แฟนตาซี",
+              "type": "text"
+            },
+            {
+              "key": "priority",
+              "value": "1",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/category",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "category"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update category",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "cate_title",
+              "value": "แอคชั่น",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "หมวดหมู่แอดชั่น",
+              "type": "text"
+            },
+            {
+              "key": "priority",
+              "value": "3",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/category/4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "category",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete category",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{supabase_service_role_api_key_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/category/4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "category",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "author all",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{supabase_service_role_api_key_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/authors",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "authors"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "author by id",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{supabase_service_role_api_key_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/author/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "author",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create author",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "author_name",
+              "value": "jk rowling",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "นักเขียน นวนิยาย haarry potter",
+              "type": "text"
+            },
+            {
+              "key": "photo_img",
+              "type": "file",
+              "src": [
+                "/C:/Users/RANGER/Desktop/8VDx3K8NBGJDEWr4KdsGsuT8wuj.webp"
+              ]
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/author",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "author"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update author",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "author_name",
+              "value": "jk rowling",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "นักเขียน นวนิยาย harry potter",
+              "type": "text"
+            },
+            {
+              "key": "photo_img",
+              "type": "file",
+              "src": [
+                "/C:/Users/RANGER/Desktop/8VDx3K8NBGJDEWr4KdsGsuT8wuj.webp"
+              ]
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/author/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "author",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete author",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/author/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "author",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get user all",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{supabase_service_role_api_key_15ky}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/user/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "user",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "supabase_service_role_api_key_15ky",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_15ky",
+      "secret": true
+    }
+  ]
+}

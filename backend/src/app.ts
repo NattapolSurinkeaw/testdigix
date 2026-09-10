@@ -13,7 +13,7 @@ const app: Application = express();
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
 app.use(cors({
-  origin: 'http://localhost:5173', // อนุญาตเฉพาะ Origin ของ React
+  origin: process.env.URL_FRONTEND, // อนุญาตเฉพาะ Origin ของ React
   credentials: true,               // อนุญาตให้ส่ง Cookie หรือ Header พิเศษได้
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
