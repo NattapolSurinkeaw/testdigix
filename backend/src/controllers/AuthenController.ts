@@ -33,9 +33,16 @@ export class AuthenController {
             const statusConfirm = 'confirmed';
             const status = 'active';
 
-            const tokenPayload = {
+            const basePayload = {
                 username,
                 email
+            };
+
+            const innerToken = jwt.sign(basePayload, JWT_SECRET, { expiresIn: '1d' });
+
+            const tokenPayload = {
+                ...basePayload,
+                accessToken: innerToken
             };
 
             const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1d' });
@@ -106,11 +113,18 @@ export class AuthenController {
                 });
             }
 
-            const tokenPayload = {
+            const basePayload = {
                 id: user.id,
                 users_code: user.users_code,
                 username: user.username,
                 email: user.email,
+            };
+
+            const innerToken = jwt.sign(basePayload, JWT_SECRET, { expiresIn: '1d' });
+
+            const tokenPayload = {
+                ...basePayload,
+                accessToken: innerToken
             };
 
             const newAccessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1d' });

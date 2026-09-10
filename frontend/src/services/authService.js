@@ -1,5 +1,14 @@
 import api from './api';
 
+const decodeToken = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload;
+  } catch {
+    return null;
+  }
+};
+
 export const authService = {
   login: async (username, password) => {
     const res = await api.post('/login', { username, password });
@@ -30,4 +39,30 @@ export const authService = {
   },
 
   isLoggedIn: () => !!localStorage.getItem('accessToken'),
+
+  isTokenValid: () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return false;
+
+    const payload = decodeToken(token);
+    if (!payload || !payload.exp) return false;
+
+    return payload.exp * 1000 > Date.now();
+  },
+
+  clearAndRedirectToLogin: () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
+    if (!window.location.pathname.startsWith('/login')) {
+      window.location.href = '/login';
+    }
+  },
+
+  validateSession: () => {
+    if (localStorage.getItem('accessToken') && !authService.isTokenValid()) {
+      authService.clearAndRedirectToLogin();
+      return false;
+    }
+    return !!authService.isTokenValid();
+  },
 };

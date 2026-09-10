@@ -4,10 +4,19 @@ import { authService } from '../services/authService';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(authService.getCurrentUser());
+  const [user, setUser] = useState(() => {
+    if (authService.validateSession()) {
+      return authService.getCurrentUser();
+    }
+    return null;
+  });
 
   useEffect(() => {
-    setUser(authService.getCurrentUser());
+    if (!authService.validateSession()) {
+      setUser(null);
+    } else {
+      setUser(authService.getCurrentUser());
+    }
   }, []);
 
   const login = async (username, password) => {
@@ -28,7 +37,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, isLoggedIn: !!user }}>
+    <AuthContext.Provider value={{ user, login, register, logout, isLoggedIn: authService.validateSession() }}>
       {children}
     </AuthContext.Provider>
   );

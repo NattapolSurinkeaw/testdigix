@@ -32,12 +32,14 @@ export default function Register() {
     try {
       const { confirmPassword, ...payload } = form;
       const res = await register(payload);
+      console.log('Register response:', res);
       if (res.status) {
         navigate('/');
       } else {
         setError(res.message || 'สมัครสมาชิกไม่สำเร็จ');
       }
     } catch (err) {
+      console.error('Register error:', err);
       setError(err.response?.data?.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่');
     } finally {
       setLoading(false);
