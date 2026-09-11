@@ -149,4 +149,40 @@ export class AuthenController {
             });
         }
     }
+
+    onLogout = async (req: Request, res: Response) => {
+        try {
+            const { id } = req.body;
+
+            if (!id) {
+                return res.status(400).json({
+                    status: false,
+                    message: "กรุณาส่ง id ของผู้ใช้"
+                });
+            }
+
+            const user: any = await User.findOne({ where: { id } });
+
+            if (!user) {
+                return res.status(404).json({
+                    status: false,
+                    message: "ไม่พบผู้ใช้งาน"
+                });
+            }
+
+            await user.update({ access_token: "" });
+
+            return res.status(200).json({
+                status: true,
+                message: "ออกจากระบบสำเร็จ"
+            });
+
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: "Internal server error",
+                error: error instanceof Error ? error.message : error
+            });
+        }
+    }
 }

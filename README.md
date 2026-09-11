@@ -1,4 +1,5 @@
-วิธีติดตั้งโปรเจกต์
+วิธีติดตั้งโปรเจกต์ 
+**แบบธรรมดา**
 
 1. clone project จาก git hub ด้วยคำสั่ง 
     - git clone https://github.com/NattapolSurinkeaw/testdigix.git
@@ -25,3 +26,14 @@
 4. สามารถ login เข้า frontend ด้วย default username จากไฟล์ฐานข้อมูลเดิมคือ
     username : admin123
     password : admin123
+
+
+**ติดตั้งโปรเจคแบบใช้ docker**
+**ในการทดสอบบนเครื่องผมใช้ docker desktop ครับ**
+1. clone project จาก git hub ด้วยคำสั่ง
+    - git clone -b training --single-branch https://github.com/NattapolSurinkeaw/testdigix.git
+
+2. หลังจากนั้นเปิด terminal 
+    2.1 cd เข้าไปที่ folder testdigix
+    2.2 ใช้คำสั่ง docker compose up --build เพื่อติดตั้ง docker ได้เลย
+

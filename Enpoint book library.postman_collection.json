@@ -88,6 +88,46 @@
       "response": []
     },
     {
+      "name": "logout",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{supabase_service_role_api_key_0jx1}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "id",
+              "value": "2",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/logout",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "book all",
       "request": {
         "auth": {
@@ -813,6 +853,10 @@
     },
     {
       "key": "json_web_token_15ky",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_0jx1",
       "secret": true
     }
   ]
