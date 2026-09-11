@@ -12,9 +12,14 @@ import { authenticateToken } from './middlewares/authMiddleware';
 const app: Application = express();
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
+const frontendOrigins = (process.env.URL_FRONTEND ?? 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
 app.use(cors({
-  origin: process.env.URL_FRONTEND, // อนุญาตเฉพาะ Origin ของ React
-  credentials: true,               // อนุญาตให้ส่ง Cookie หรือ Header พิเศษได้
+  origin: frontendOrigins,
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
