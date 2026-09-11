@@ -23,6 +23,20 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Sample Route
+app.get('/', (req: Request, res: Response) => {
+  res.json({ message: 'api already to use' });
+});
+
+app.get('/test', (req: Request, res: Response) => {
+  res.json({
+    status: 'ok',
+    message: 'Test route is working',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+
 app.use('/uploads', express.static('uploads'));
 
 app.use('/api', authenRoute)
@@ -41,19 +55,6 @@ app.use((err: any, req: Request, res: Response, next: any) => {
     });
   }
   next();
-});
-
-// Sample Route
-app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'api already to use' });
-});
-
-app.get('/test', (req: Request, res: Response) => {
-  res.json({
-    status: 'ok',
-    message: 'Test route is working',
-    timestamp: new Date().toISOString(),
-  });
 });
 
 // Start Server
