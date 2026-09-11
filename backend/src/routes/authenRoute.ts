@@ -7,5 +7,6 @@ const authenController = new AuthenController
 
 router.post('/login', upload.single('profile_img'), authenController.onLogin)
 router.post('/register', upload.single('profile_img'), authenController.onRegister)
+router.post('/logout', upload.none(), authenController.onLogout)
 
 export const authenRoute = router

@@ -28,7 +28,15 @@ export const authService = {
     return res.data;
   },
 
-  logout: () => {
+  logout: async () => {
+    try {
+      const user = authService.getCurrentUser();
+      if (user?.id) {
+        await api.post('/logout', { id: user.id });
+      }
+    } catch (e) {
+      console.error('Logout API failed:', e);
+    }
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
   },
