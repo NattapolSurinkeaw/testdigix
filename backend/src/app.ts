@@ -11,21 +11,6 @@ import { categoryRoute } from './routes/categoryRoute';
 import { userRoute } from './routes/userRoute';
 import { authenticateToken } from './middlewares/authMiddleware';
 
-const UPLOADS_DIR = path.join(__dirname, '../uploads');
-if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-}
-
-const imageMimeTypes: Record<string, string> = {
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.png': 'image/png',
-  '.gif': 'image/gif',
-  '.webp': 'image/webp',
-  '.svg': 'image/svg+xml',
-  '.bmp': 'image/bmp',
-  '.ico': 'image/x-icon',
-};
 
 const app: Application = express();
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
@@ -60,17 +45,7 @@ app.get('/test', (req: Request, res: Response) => {
 });
 
 
-app.use('/uploads', express.static(UPLOADS_DIR, {
-  maxAge: '7d',
-  fallthrough: false,
-  setHeaders: (res, filePath) => {
-    const ext = path.extname(filePath).toLowerCase();
-    const mime = imageMimeTypes[ext];
-    if (mime) res.setHeader('Content-Type', mime);
-    res.setHeader('Cache-Control', 'public, max-age=604800, immutable, no-transform');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  },
-}));
+app.use('/uploads', express.static('uploads'));
 
 app.use('/api', authenRoute)
 
