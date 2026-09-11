@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import { Card } from "@mui/material";
 import { categoryService } from '../../services/categoryService';
 import CreateCategoryModal from './components/CreateCategoryModal';
+import EditCategoryModal from './components/EditCategoryModal';
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editTarget, setEditTarget] = useState(null);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -21,6 +24,27 @@ export default function Categories() {
   };
 
   useEffect(() => { fetchCategories(); }, []);
+
+  const handleOpenEdit = (cat) => {
+    setEditTarget(cat);
+    setOpenEdit(true);
+  };
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+    setEditTarget(null);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('ลบหมวดหมู่นี้?')) return;
+    try {
+      const res = await categoryService.remove(id);
+      if (res.status) fetchCategories();
+      else alert(res.message || 'ลบไม่สำเร็จ');
+    } catch (err) {
+      alert(err.response?.data?.message || 'เกิดข้อผิดพลาด');
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -56,6 +80,20 @@ export default function Categories() {
                   Priority: {cat.priority} · {cat.status_display ? 'แสดง' : 'ซ่อน'}
                 </p>
               </div>
+              <div className="flex justify-center items-center gap-8">
+                <button
+                  onClick={() => handleOpenEdit(cat)}
+                  className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold w-20 h-10 rounded-md transition-all ease-in-out duration-300"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(cat.id)}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold w-20 h-10 rounded-md transition-all ease-in-out duration-300"
+                >
+                  Delete
+                </button>
+              </div>
             </Card>
           ))}
         </Card>
@@ -65,6 +103,13 @@ export default function Categories() {
         open={openCreate}
         onClose={() => setOpenCreate(false)}
         onCreated={fetchCategories}
+      />
+
+      <EditCategoryModal
+        open={openEdit}
+        category={editTarget}
+        onClose={handleCloseEdit}
+        onUpdated={fetchCategories}
       />
     </div>
   );
