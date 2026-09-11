@@ -1,3 +1,15 @@
+**วิธีทดสอบบนเซิร์ฟจริง**
+1. สามารถทดสอบ frontend ได้ผ่าน url
+    - https://nattapoldev.shop หรือเข้าด้วย IP vps https://160.236.128.77
+
+    1.1 สามารถ login user เริ่มต้น ด้วย
+        username: admin
+        password: admin123
+
+2. สามารถทดสอบ backend ได้ผ่าน url
+    - https://nattapoldev.shop/api หรือเข้าด้วย IP vps https://160.236.128.77/api
+
+
 วิธีติดตั้งโปรเจกต์ 
 **แบบธรรมดา**
 
@@ -30,7 +42,7 @@
 
 **ติดตั้งโปรเจคแบบใช้ docker**
 **ในการทดสอบบนเครื่องผมใช้ docker desktop ครับ**
-1. clone project จาก git hub ด้วยคำสั่ง
+1. clone project จาก github จาก branch training ด้วยคำสั่ง
     - git clone -b training --single-branch https://github.com/NattapolSurinkeaw/testdigix.git
 
 2. หลังจากนั้นเปิด terminal 
