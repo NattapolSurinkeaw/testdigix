@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Books } from '../models/books';
 import fs from 'fs';
+import path from 'path';
 
 export class BookController {
     onGetBooks = async (req: Request, res: Response) => {
@@ -74,7 +75,7 @@ export class BookController {
 
             let thumnail = null;
             if (req.file) {
-                thumnail = req.file.path.replace(/\\/g, "/");
+                thumnail = `uploads/${path.basename(req.file.path)}`.replace(/\\/g, '/');
             }
 
             const newBook = await Books.create({
@@ -134,7 +135,7 @@ export class BookController {
             };
 
             if (req.file) {
-                const newThumnail = req.file.path.replace(/\\/g, "/");
+                const newThumnail = `uploads/${path.basename(req.file.path)}`.replace(/\\/g, '/');
 
                 if (book.thumnail && fs.existsSync(book.thumnail)) {
                     try {

@@ -29,6 +29,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev && npm cache clean --force
 COPY --from=build /app/dist ./dist
-RUN mkdir -p /app/uploads
+RUN mkdir -p /app/uploads && chown -R node:node /app
+USER node
 EXPOSE 8000
 CMD ["node", "dist/app.js"]
